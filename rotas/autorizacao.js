@@ -1,4 +1,3 @@
-// routes/auth.js
 const express = require('express');
 const router = express.Router();
 const db = require('../database');
@@ -13,10 +12,9 @@ router.post('/login', (req, res) => {
       return res.status(500).json({ error: 'Erro interno no servidor.' });
     }
     if (row) {
-      // Login válido
-      return res.status(200).json({ message: 'Login válido' });
+      // Retorna os dados do usuário
+      return res.status(200).json({ message: 'Login válido', user: row });
     } else {
-      // Credenciais incorretas
       return res.status(401).json({ error: 'Credenciais inválidas' });
     }
   });
