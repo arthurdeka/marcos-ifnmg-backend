@@ -1,10 +1,6 @@
 -- Ativar suporte a Foreign Keys no SQLite
 PRAGMA foreign_keys = ON;
 
--- Se existirem tabelas de antes, removê-las (cuidado: apaga dados!)
-DROP TABLE IF EXISTS evento;
-DROP TABLE IF EXISTS clientes;
-DROP TABLE IF EXISTS users;
 
 -- Cria tabela de clientes
 CREATE TABLE clientes (
@@ -21,7 +17,6 @@ CREATE TABLE clientes (
 CREATE TABLE evento (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nome_evento TEXT NOT NULL,
-    -- Agora "cliente" se torna chave estrangeira para 'clientes.id'
     cliente INTEGER NOT NULL,
     meio_agendamento TEXT,
     local_evento TEXT,
@@ -29,7 +24,6 @@ CREATE TABLE evento (
     tipo_evento TEXT,
     atendente_responsavel TEXT,
     observacoes TEXT,
-    -- Nova coluna horas_duracao
     horas_duracao INTEGER,
     -- Define a FK (cliente -> clientes.id)
     FOREIGN KEY (cliente) REFERENCES clientes (id)
