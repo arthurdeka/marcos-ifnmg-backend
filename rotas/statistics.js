@@ -1,35 +1,22 @@
-// routes/statistics.js
 const express = require('express');
 const router = express.Router();
-const db = require('../database');
+const pool = require('../db'); // conexão PostgreSQL
 
-router.get('/', (req, res) => {
-  // Consulta para contar os eventos
-  db.get('SELECT COUNT(*) AS totalEventos FROM evento', (err, eventosRow) => {
-    if (err) {
-      console.error('Erro ao contar eventos:', err);
-      return res.status(500).json({ error: 'Erro ao contar eventos.' });
-    }
-    // Consulta para contar os clientes
-    db.get('SELECT COUNT(*) AS totalClientes FROM clientes', (err, clientesRow) => {
-      if (err) {
-        console.error('Erro ao contar clientes:', err);
-        return res.status(500).json({ error: 'Erro ao contar clientes.' });
-      }
-      // Consulta para contar os usuários
-      db.get('SELECT COUNT(*) AS totalUsuarios FROM users', (err, usuariosRow) => {
-        if (err) {
-          console.error('Erro ao contar usuários:', err);
-          return res.status(500).json({ error: 'Erro ao contar usuários.' });
-        }
-        return res.json({
-          totalEventos: eventosRow.totalEventos,
-          totalClientes: clientesRow.totalClientes,
-          totalUsuarios: usuariosRow.totalUsuarios
-        });
-      });
+router.get('/', async (req, res) => {
+  try {
+    const eventosResult = await pool.query('SELECT COUNT(*) AS total_eventos FROM evento');
+    const clientesResult = await pool.query('SELECT COUNT(*) AS total_clientes FROM clientes');
+    const usuariosResult = await pool.query('SELECT COUNT(*) AS total_usuarios FROM users');
+
+    res.json({
+      totalEventos: parseInt(eventosResult.rows[0].total_eventos),
+      totalClientes: parseInt(clientesResult.rows[0].total_clientes),
+      totalUsuarios: parseInt(usuariosResult.rows[0].total_usuarios)
     });
-  });
+  } catch (err) {
+    console.error('Erro ao buscar estatísticas:', err);
+    res.status(500).json({ error: 'Erro ao buscar estatísticas.' });
+  }
 });
 
 module.exports = router;

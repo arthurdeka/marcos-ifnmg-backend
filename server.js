@@ -4,7 +4,6 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
 
-const db = require('./database');
 const clientesRoutes = require('./rotas/clientes');
 const eventosRoutes = require('./rotas/eventos');
 const usersRoutes = require('./rotas/users');

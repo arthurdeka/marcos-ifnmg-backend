@@ -1,19 +1,20 @@
 // database.js
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
+const { Pool } = require('pg');
 
-// Caminho do arquivo .db (armazena localmente)
-const dbPath = path.resolve(__dirname, 'database.db');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false, // Necessário para conexões com Neon
+  },
+});
 
-// Inicializa conexão
-const db = new sqlite3.Database(dbPath, (err) => {
+pool.connect((err, client, release) => {
   if (err) {
-    console.error('Erro ao conectar ao banco de dados:', err);
+    console.error('Erro ao conectar ao banco de dados PostgreSQL:', err.stack);
   } else {
-    console.log('Conectado ao banco de dados SQLite com sucesso.');
+    console.log('Conectado ao banco de dados PostgreSQL com sucesso.');
+    release();
   }
 });
 
-
-// Exporta o objeto db para uso em outros arquivos
-module.exports = db;
+module.exports = pool;
