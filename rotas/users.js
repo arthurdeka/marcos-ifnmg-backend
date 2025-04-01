@@ -5,13 +5,12 @@ const db = require('../database');
 
 // CREATE
 router.post('/', (req, res) => {
-  const { username, role, password } = req.body;
+  const { username, password } = req.body;
   const sql = `
-    INSERT INTO users (username, role, password)
-    VALUES (?, ?, ?)
+    INSERT INTO users (username, password)
+    VALUES (?, ?)
   `;
-
-  db.run(sql, [username, role, password], function (err) {
+  db.run(sql, [username, password], function (err) {
     if (err) {
       console.error('Erro ao criar usuário:', err);
       return res.status(500).json({ error: 'Erro ao criar usuário.' });
@@ -39,7 +38,6 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   const { id } = req.params;
   const sql = 'SELECT * FROM users WHERE id = ?';
-
   db.get(sql, [id], (err, row) => {
     if (err) {
       console.error('Erro ao obter usuário:', err);
@@ -55,18 +53,15 @@ router.get('/:id', (req, res) => {
 // UPDATE
 router.put('/:id', (req, res) => {
   const { id } = req.params;
-  const { username, role, password } = req.body;
-
+  const { username, password } = req.body;
   const sql = `
     UPDATE users
     SET
       username = ?,
-      role = ?,
       password = ?
     WHERE id = ?
   `;
-
-  db.run(sql, [username, role, password, id], function (err) {
+  db.run(sql, [username, password, id], function (err) {
     if (err) {
       console.error('Erro ao atualizar usuário:', err);
       return res.status(500).json({ error: 'Erro ao atualizar usuário.' });
@@ -82,7 +77,6 @@ router.put('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
   const { id } = req.params;
   const sql = 'DELETE FROM users WHERE id = ?';
-
   db.run(sql, [id], function (err) {
     if (err) {
       console.error('Erro ao deletar usuário:', err);
