@@ -1,9 +1,13 @@
--- Ativar suporte a Foreign Keys no SQLite
+-- Ativa o suporte a foreign keys
 PRAGMA foreign_keys = ON;
 
+-- Remove as tabelas existentes (CUIDADO: isso apagará os dados atuais)
+DROP TABLE IF EXISTS evento;
+DROP TABLE IF EXISTS clientes;
+DROP TABLE IF EXISTS users;
 
--- Cria tabela de clientes
-CREATE TABLE clientes (
+-- Cria a tabela de clientes
+CREATE TABLE IF NOT EXISTS clientes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nome_completo TEXT NOT NULL,
     cpf_cnpj TEXT NOT NULL,
@@ -13,8 +17,8 @@ CREATE TABLE clientes (
     observacoes TEXT
 );
 
--- Cria tabela de eventos
-CREATE TABLE evento (
+-- Cria a tabela de eventos com FK para clientes e ON DELETE CASCADE
+CREATE TABLE IF NOT EXISTS evento (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nome_evento TEXT NOT NULL,
     cliente INTEGER NOT NULL,
@@ -25,18 +29,16 @@ CREATE TABLE evento (
     atendente_responsavel TEXT,
     observacoes TEXT,
     horas_duracao INTEGER,
-    -- Define a FK (cliente -> clientes.id)
-    FOREIGN KEY (cliente) REFERENCES clientes (id)
+    FOREIGN KEY (cliente) REFERENCES clientes(id) ON DELETE CASCADE
 );
 
--- Cria tabela de usuários do sistema
-CREATE TABLE users (
+-- Cria a tabela de usuários (sem campo role)
+CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL,
-    role TEXT NOT NULL,
     password TEXT NOT NULL
 );
 
--- Insere um usuário exemplo
-INSERT INTO users (username, role, password)
-VALUES ('professor', 'admin', '123456');
+-- Insere um usuário padrão (exemplo: admin)
+INSERT INTO users (username, password)
+VALUES ('admin', '123456');
