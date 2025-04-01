@@ -1,10 +1,10 @@
 const { Pool } = require('pg');
+require('dotenv').config(); // carrega .env localmente (em dev)
 
-// substitua pela sua connection string real do Neon
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false, // necessário para Neon
+    rejectUnauthorized: false, // necessário para o Neon
   },
 });
 
