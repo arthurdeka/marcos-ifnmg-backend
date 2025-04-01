@@ -8,7 +8,8 @@ const db = require('./database');
 const clientesRoutes = require('./rotas/clientes');
 const eventosRoutes = require('./rotas/eventos');
 const usersRoutes = require('./rotas/users');
-const authRoutes = require('./rotas/autorizacao'); 
+const authRoutes = require('./rotas/autorizacao');
+const statisticsRoutes = require('./rotas/statistics');
 
 app.use(cors()); // <--- essa linha habilita CORS para qualquer origem
 
@@ -18,6 +19,8 @@ app.use(express.json());
 app.use('/clientes', clientesRoutes);
 app.use('/eventos', eventosRoutes);
 app.use('/users', usersRoutes);
+app.use('/statistics', statisticsRoutes);
+
 
 // Rota de autenticação
 app.use('/', authRoutes); 
