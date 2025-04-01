@@ -1,14 +1,11 @@
--- Ativa o suporte a foreign keys
-PRAGMA foreign_keys = ON;
-
--- Remove as tabelas existentes (CUIDADO: isso apagará os dados atuais)
+-- Remove as tabelas existentes
 DROP TABLE IF EXISTS evento;
 DROP TABLE IF EXISTS clientes;
 DROP TABLE IF EXISTS users;
 
 -- Cria a tabela de clientes
-CREATE TABLE IF NOT EXISTS clientes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE clientes (
+    id SERIAL PRIMARY KEY,
     nome_completo TEXT NOT NULL,
     cpf_cnpj TEXT NOT NULL,
     telefone TEXT,
@@ -18,8 +15,8 @@ CREATE TABLE IF NOT EXISTS clientes (
 );
 
 -- Cria a tabela de eventos com FK para clientes e ON DELETE CASCADE
-CREATE TABLE IF NOT EXISTS evento (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE evento (
+    id SERIAL PRIMARY KEY,
     nome_evento TEXT NOT NULL,
     cliente INTEGER NOT NULL,
     meio_agendamento TEXT,
@@ -29,16 +26,17 @@ CREATE TABLE IF NOT EXISTS evento (
     atendente_responsavel TEXT,
     observacoes TEXT,
     horas_duracao INTEGER,
-    FOREIGN KEY (cliente) REFERENCES clientes(id) ON DELETE CASCADE
+    CONSTRAINT fk_cliente FOREIGN KEY (cliente)
+      REFERENCES clientes(id) ON DELETE CASCADE
 );
 
--- Cria a tabela de usuários (sem campo role)
-CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+-- Cria a tabela de usuários
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
     username TEXT NOT NULL,
     password TEXT NOT NULL
 );
 
--- Insere um usuário padrão (exemplo: admin)
+-- Insere um usuário padrão
 INSERT INTO users (username, password)
 VALUES ('admin', '123456');
